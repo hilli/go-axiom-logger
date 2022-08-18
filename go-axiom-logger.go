@@ -1,14 +1,12 @@
-package main
+package goaxiomlogger
 
 import (
-	"log"
-
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
 	adapter "github.com/axiomhq/axiom-go/adapters/logrus"
 )
 
-func Example() {
+func init() {
 	// Export `AXIOM_TOKEN`, `AXIOM_ORG_ID` (when using a personal token) and
 	// `AXIOM_DATASET` for Axiom Cloud.
 	// Export `AXIOM_URL`, `AXIOM_TOKEN` and `AXIOM_DATASET` for Axiom Selfhost.
@@ -17,18 +15,14 @@ func Example() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	logrus.RegisterExitHandler(hook.Close)
-
-	logger := logrus.New()
-	logger.AddHook(hook)
-
-	logger.WithField("mood", "hyped").Info("This is awesome!")
-	logger.WithField("mood", "worried").Warn("This is no that awesome...")
-	logger.WithField("mood", "depressed").Error("This is rather bad.")
-
-	logrus.Exit(0)
+	log.RegisterExitHandler(hook.Close)
+	log.AddHook(hook)
 }
 
-func main() {
-	Example()
-}
+// func main() {
+// 	log.WithField("mood", "hyped").Info("This is awesome!")
+// 	log.WithField("mood", "worried").Warn("This is no that awesome...")
+// 	log.WithField("mood", "depressed").Error("This is rather bad.")
+// 	log.Infof("Exiting...")
+// 	log.Exit(0)
+// }
