@@ -7,16 +7,13 @@ import (
 )
 
 func init() {
-	// Export `AXIOM_TOKEN`, `AXIOM_ORG_ID` (when using a personal token) and
-	// `AXIOM_DATASET` for Axiom Cloud.
-	// Export `AXIOM_URL`, `AXIOM_TOKEN` and `AXIOM_DATASET` for Axiom Selfhost.
-
 	hook, err := adapter.New()
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		log.RegisterExitHandler(hook.Close)
+		log.AddHook(hook)
 	}
-	log.RegisterExitHandler(hook.Close)
-	log.AddHook(hook)
 }
 
 // func main() {
