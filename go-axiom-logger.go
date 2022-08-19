@@ -1,4 +1,4 @@
-package goaxiomlogger
+package logrus
 
 import (
 	log "github.com/sirupsen/logrus"
