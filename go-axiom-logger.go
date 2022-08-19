@@ -1,25 +1,33 @@
-package logrus
+package axiomLogger
 
 import (
-	log "github.com/sirupsen/logrus"
+	"os"
+
+	"github.com/sirupsen/logrus"
 
 	adapter "github.com/axiomhq/axiom-go/adapters/logrus"
 )
 
+var hostname string
+
 func init() {
-	hook, err := adapter.New()
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.RegisterExitHandler(hook.Close)
-		log.AddHook(hook)
-	}
+
 }
 
-// func main() {
-// 	log.WithField("mood", "hyped").Info("This is awesome!")
-// 	log.WithField("mood", "worried").Warn("This is no that awesome...")
-// 	log.WithField("mood", "depressed").Error("This is rather bad.")
-// 	log.Infof("Exiting...")
-// 	log.Exit(0)
-// }
+func New() *logrus.Entry {
+	logger := logrus.New()
+	hostname, _ = os.Hostname() // Best effort here
+
+	hook, err := adapter.New()
+	if err != nil {
+		logrus.Warnf("Unable to configure Axiom: %v", err) // Still best effort here
+	} else {
+		logrus.RegisterExitHandler(hook.Close)
+		logrus.AddHook(hook)
+		// logrus.SetReportCaller(true)
+	}
+	entry := logger.WithFields(logrus.Fields{
+		"hostname": hostname,
+	})
+	return entry
+}
